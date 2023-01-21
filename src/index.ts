@@ -304,7 +304,7 @@ function SET(parameters: Interpreter.Value[], memory: Interpreter.Memory): Inter
         isTrue(key) || isNil(key)
     )
         throw new Error("SET: Left-hand parameter is illegal.");
-    memory.set(key.value, value);
+    memory.set(key.value.toUpperCase(), value);
     return value;
 }
 
