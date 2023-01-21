@@ -316,6 +316,6 @@ function SETQ(parameters: Interpreter.Value[], memory: Interpreter.Memory): Inte
         isTrue(parameters[0]) || isNil(parameters[0])
     )
         throw new Error("SETQ: Left-hand parameter is illegal.");
-    memory.set(parameters[0].value, value);
+    memory.set(parameters[0].value.toUpperCase(), value);
     return value;
 }
