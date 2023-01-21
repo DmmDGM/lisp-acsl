@@ -1,0 +1,1 @@
+node compiled/index.js $@
