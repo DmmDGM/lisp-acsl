@@ -62,7 +62,7 @@ function isTrue(parameter: Interpreter.Value): boolean {
 }
 
 function isNil(parameter: Interpreter.Value): boolean {
-    return (parameter.type === "LIST" && !parameter.value.length);
+    return (parameter.type === "ATOM" && parameter.value.toUpperCase() === "NIL") || (parameter.type === "LIST" && !parameter.value.length);
 }
 
 function toString(parameter: Interpreter.Value, memory: Interpreter.Memory, useColor: boolean = false): string {
@@ -165,11 +165,12 @@ function DEF(parameters: Interpreter.Value[], memory: Interpreter.Memory): Inter
     let methodName = parameters[0];
     let methodParameters = parameters[1];
     let methodDefinition = parameters[2];
-    if(methodName.type !== "ATOM" || methodName.escaped) throw new Error("DEF: Illegal function name.");
-    if(
-        methodParameters.type !== "LIST" || methodParameters.escaped ||
-        methodParameters.value.length !== 1 || methodParameters.value[0].type !== "ATOM"
-    )
+    if(methodName.type !== "ATOM" || methodName.escaped || isTrue(methodName) || isNil(methodName) || !isNaN(Number(methodName.value)))
+        throw new Error("DEF: Illegal function name.");
+    if(methodParameters.type !== "LIST" || methodParameters.escaped || methodParameters.value.length !== 1)
+        throw new Error("DEF: Illegal function arguments.");
+    let methodValue = methodParameters.value[0];
+    if(methodValue.type !== "ATOM" || methodValue.escaped || isTrue(methodValue) || isNil(methodValue) || !isNaN(Number(methodValue.value)))
         throw new Error("DEF: Illegal function arguments.");
     if(methodDefinition.type !== "LIST" || methodDefinition.escaped)
         throw new Error("DEF: Illegal function definition.");
